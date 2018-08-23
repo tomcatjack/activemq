@@ -14,9 +14,9 @@ import javax.jms.*;
 @Slf4j
 public class Receive01 {
 
-    private static final String url = "tcp://192.168.3.62:61616";
+    private static final String url = "tcp://192.168.3.72:61616";
 
-    private static final String topicName = "FirstTopic1";
+    private static final String topicName = "FirstTopic3";
 
     public static void main(String[] args) {
         Connection connection = null;

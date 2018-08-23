@@ -7,15 +7,16 @@ import javax.jms.*;
 
 /**
  * @author LUCCI
- * @date 2018/8/16 16:02
+ * @date 2018/8/16 16:01
  * @Description: 接收者2
  * @Modify:
  */
 @Slf4j
 public class Receive02 {
-    private static final String url = "tcp://192.168.3.62:61616";
 
-    private static final String topicName = "FirstTopic1";
+    private static final String url = "tcp://192.168.3.72:61616";
+
+    private static final String topicName = "FirstTopic3";
 
     public static void main(String[] args) {
         Connection connection = null;
@@ -47,15 +48,16 @@ public class Receive02 {
                 @Override
                 public void onMessage(Message message) {
                     try {
-                        log.info("订阅者二收到的消息：{}"+((TextMessage)message).getText());
+                        log.info("订阅者二收到的消息：{}" + ((TextMessage) message).getText());
                     } catch (JMSException e) {
                         e.printStackTrace();
                     }
                 }
             });
         } catch (Exception e) {
-            log.info("接收消息异常:{}",e);
+            log.info("接收消息异常:{}", e);
         } finally {
         }
     }
 }
+

@@ -7,12 +7,12 @@ import javax.jms.*;
 
 /**
  * @author LUCCI
- * @date 2018/8/16 11:52
- * @Description: 生产者 (一对一模式)
+ * @date 2018/8/16 15:26
+ * @Description: 消费者 (一对一模式)
  * @Modify:
  */
 @Slf4j
-public class AppProducer {
+public class AppReceive01 {
 
     private static final String url = "tcp://192.168.3.72:61616";
 
@@ -40,26 +40,28 @@ public class AppProducer {
             //5.创建一个到达的目的地，其实想一下就知道了，activemq不可能同时只能跑一个队列吧，这里就是连接了一个名为"text-msg"的队列，这个会话将会到这个队列，当然，如果这个队列不存在，将会被创建
             Destination destination = session.createQueue(queueName);
 
-            //6.从session中，获取一个消息生产者
-            MessageProducer producer = session.createProducer(destination);
+            //6.创建一个消费者
+            MessageConsumer  consumer = session.createConsumer(destination);
 
-            //7.设置生产者的模式，有两种可选
-            //DeliveryMode.PERSISTENT 当activemq关闭的时候，队列数据将会被保存
-            //DeliveryMode.NON_PERSISTENT 当activemq关闭的时候，队列里面的数据将会被清空
-            producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+            //7.实现一个消息的监听器
+            //实现这个监听器后，以后只要有消息，就会通过这个监听器接收到
+            consumer.setMessageListener(new MessageListener() {
+                @Override
+                public void onMessage(Message message) {
+                    try {
+                        String text = ((TextMessage) message).getText();
+                        log.info("接收消息:{}",text);
+                    } catch (JMSException e) {
+                        e.printStackTrace();
+                    }
 
-            //8.创建一条消息，当然，消息的类型有很多，如文字，字节，对象等,可以通过session.create..方法来创建出来
-            for (int i = 0; i < 1; i++) {
-                TextMessage textMsg = session.createTextMessage("测试不删除继续接收" + i);
-                //发送一条消息
-                producer.send(textMsg);
-                log.info("发送消息:{}",textMsg);
-            }
-            log.info("发送成功");
-        } catch (Exception e) {
-            log.info("发送消息异常:{}",e);
+                }
+            });
+
+        }catch (Exception e){
+            log.info("接收消息异常:{}",e);
         } finally {
-            connection.close();
+            //connection.close();
         }
     }
 }

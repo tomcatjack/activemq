@@ -14,7 +14,7 @@ import javax.jms.*;
 @Slf4j
 public class AppReceive {
 
-    private static final String url = "tcp://192.168.3.62:61616";
+    private static final String url = "tcp://192.168.3.72:61616";
 
     private static final String queueName = "queue-test";
 
